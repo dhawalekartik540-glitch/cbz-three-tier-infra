@@ -1,29 +1,29 @@
 # Create an S3 bucket
 resource "aws_s3_bucket" "cbz_bucket6666262" {
-  bucket = "cbz-frontend-project-bux" # Replace with a globally unique bucket name
+  bucket = "cbz-frontend-project-bux" # Must be globally unique
 
-  # Enable static website hosting
   website {
     index_document = "index.html"
     error_document = "error.html"
   }
 
   tags = {
-    Name        = "StaticWebsiteBucket"
-    env = "dev"
+    Name = "StaticWebsiteBucket"
+    env  = "dev"
   }
 }
 
 # Disable Block Public Access
 resource "aws_s3_bucket_public_access_block" "example" {
-  bucket = aws_s3_bucket.cbz_bucket6666262
+  bucket = aws_s3_bucket.cbz_bucket6666262.id
 
   block_public_acls       = false
   block_public_policy     = false
   ignore_public_acls      = false
   restrict_public_buckets = false
 }
-# Set the bucket policy to allow public read access (use cautiously)
+
+# Bucket policy for public website access
 resource "aws_s3_bucket_policy" "static_website_policy" {
   bucket = aws_s3_bucket.cbz_bucket6666262.id
 
@@ -38,10 +38,13 @@ resource "aws_s3_bucket_policy" "static_website_policy" {
       }
     ]
   })
-  depends_on = [aws_s3_bucket_public_access_block.example]
+
+  depends_on = [
+    aws_s3_bucket_public_access_block.example
+  ]
 }
 
-# Output the bucket's website endpoint
+# Output website endpoint
 output "website_endpoint" {
   value       = aws_s3_bucket.cbz_bucket6666262.website_endpoint
   description = "The URL to access the static website"
