@@ -57,9 +57,9 @@ resource "aws_db_instance" "cbz_db_instance" {
 
 # Create a DB Subnet Group using default subnets
 resource "aws_db_subnet_group" "default" {
-  name       = "default-db-subnet-group-1"
+  name       = "default-db-subnet-group-kartik"
   subnet_ids = data.aws_subnets.default.ids
   tags = {
-    Name = "default-db-subnet-group"
+    Name = "default-db-subnet-group-kartik"
   }
 }
